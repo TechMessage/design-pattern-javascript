@@ -8,5 +8,47 @@
 
  */
 
- 
+// 传统的策略模式
+
+// 策略类,不同的策略模式
+var strategies = {
+    isNonEmpty: function (value, errorMsg) {
+        if (value === '' || value == undefined || value == null) {
+            return errorMsg;
+        }
+    },
+    isMobile: function (value, errorMsg) {
+        if (!/^1[0-9]{10}$/.test(value)) {
+            return errorMsg;
+        }
+    }
+}
+
+
+// 校验类，负责调用不同的策略，管理策略
+
+var Validator = function () {
+    this.rules = []; // 缓存所有的校验规则
+}
+
+
+Validator.prototype.add = function (dom, rule, errorMsg) {
+    this.rules.push(function () {
+        return strategies[rule].call(null, dom, errorMsg)
+    })
+}
+
+
+Validator.prototype.start = function () {
+    if (this.rules.length) {
+        for (var i = 0, vacFuc; vacFuc = this.rules[i++];) {
+            var msg = vacFuc();
+            if (msg) {
+                return msg;
+            }
+        }
+    }
+}
+
+
 
