@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<!--    
+    1.单例模式: 保证一个类仅有一个实例对象，提供全局可访问
+    
+    应用场景： 线程池概念，全局缓存，浮窗（每次触发都是同一个）
+
+    
+
+ -->
+
+<body>
+
+    <script>
+        var Singleton = function(name) {
+            this.name = name;
+        }
+
+        Singleton.prototype.getName = function() {
+            console.log(this.name);
+        }
+
+        /*
+        Singleton.getInstance = function() {
+            if (!this.instance) {
+                this.instance = new Singleton(name); // 这里是把实例对象挂到Singleton这个对象上
+            }
+            return this.instance;
+        };
+
+        */
+
+        Singleton.getInstance = (function() {
+
+            var instance = null;
+
+            return function(name) {
+                if (!instance) {
+                    instance = new Singleton(name);
+                }
+                return instance;
+            }
+
+        }());
+
+
+        var a = Singleton.getInstance('apple');
+        var b = Singleton.getInstance('apple');
+
+
+        /* 透明的单例模式，就是想普通new 调用一样  */
+
+
+        /* 惰性单例 在真正需要的时候在 创建 比如页面中的dom节点 */
+
+        var Dialog = (function() {
+            var dialog;
+            return function() {
+
+                if (!dialog) {
+                    dialog = document.createElement('div');
+                    dialog.innerHTML = '对话窗口';
+                    div.style.display = 'none';
+                    document.body.appendChild(dialog);
+                }
+                return dialog;
+            }
+        })();
+
+
+        /* 上面的例子，单例和创建对象不符合单一职责原则，应该把单例管理和创建对象抽离  */
+
+
+        var getSingle = function(func) {
+            var obj;
+            return function() {
+                if (!obj) {
+                    obj = func.apply(this, arguments);
+                }
+                return obj;
+            }
+        }
+
+
+        /*  创建对话框  */
+        var createDialog = getSingle(function() {
+            var div = document.createElement('div');
+            div.style.display = 'none';
+            document.body.appendChild(div);
+            return div;
+        })
+
+
+        var dialog1 = createDialog();
+
+        /* 创建iframe */
+
+        
+        
+
+    </script>
+
+</body>
+
+</html>
