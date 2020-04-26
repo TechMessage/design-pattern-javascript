@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<!-- 
+
+    1. 命令模式 
+
+        发出指令 ---- 指令接受 ----- 执行指令
+
+        
+    典型场景：
+
+        页面上一堆功能按钮，每个按钮的触发都会触发指令， 由指令去完成对应的动作
+
+
+    
+
+ -->
+
+<body>
+
+    <ul>
+        <li><button>按钮1</button></li>
+        <li><button>按钮2</button></li>
+        <li><button>按钮3</button></li>
+    </ul>
+
+
+    <script>
+        /* 给按钮添加指令 */
+        var setCommand = function(btn, command) {
+            btn.onclick = function() {
+                command.execute()
+            }
+        }
+
+        /* 指令函数 */
+        var functs = {
+            func1: function() {
+                alert('功能1')
+            },
+
+            func2: function() {
+                alert('功能2')
+            },
+
+            func3: function() {
+                alert('功能3')
+            }
+        }
+
+        /* 指令封装 */
+
+        var func1Command = function(recevier) {
+            return {
+                execute: function() {
+                    recevier.func1();
+                }
+            }
+        }
+
+
+        setCommand(document.querySelector('li>button:first-child'), func1Command(functs));
+
+
+        
+
+
+    </script>
+
+</body>
+
+</html>
