@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<!-- 
+
+    状态模式 —— 状态的变化引起事物行为的变化
+
+    状态 -> 变化
+
+
+    典型的场景：
+
+    1. 灯的 开关闭合
+
+
+    关键：
+    1. 事物的每一种状态都封装成一个单独的类，根状态绑定在一起
+    
+    2. javascript版本的状态机，无类的语言中，可以很方便的使用委托技术
+
+
+ -->
+
+<body>
+    <script>
+        /*
+        var Light = function() {
+            this.state = 'off';
+            this.button = null;
+        }
+
+        Light.prototype.init = function() {
+
+            var btn = document.createElement('button');
+            var self = this;
+            btn.innerHTML = '开关';
+            document.body.appendChild(btn);
+            btn.onclick = function() {
+                self.pressed();
+            }
+            this.button = btn;
+        }
+
+        Light.prototype.pressed = function() {
+            if (this.state == 'off') {
+                console.log('开灯');
+                this.state = 'on'
+            } else if (this.state == 'on') {
+                console.log('关灯');
+                this.state = 'off'
+            }
+        }
+
+        var lit = new Light();
+
+        lit.init();
+
+        */
+
+
+        /* 
+            pressed 这个方法违反开放-封闭原则，每次新增或者修改状态的时候都需要改动内部的代码，这是一个非常不稳定的方法
+
+            状态的切换不明显，仅仅表现为state变量赋值，状态的切换都是在press方法里堆砌if/else代码，难以维护
+    
+         */
+
+
+
+        /*
+        var OffState = function(light) {
+            this.light = light;
+        }
+
+        var OnState = function(light) {
+            this.light = light;
+        }
+
+        OffState.prototype.pressed = function() {
+            console.log('开灯');
+            this.light.setState(this.light.onState); // 切换状态
+        }
+
+        OnState.prototype.pressed = function() {
+            console.log('关灯');
+            this.light.setState(this.light.offState);
+        }
+
+        var Light = function() {
+            this.onState = new OnState(this);
+            this.offState = new OffState(this);
+            this.button = null;
+        }
+
+        Light.prototype.init = function() {
+
+            var button = document.createElement('button'),
+                self = this;
+
+            this.button = document.body.appendChild(button);
+            this.button.innerHTML = '开关';
+
+            this.currState = this.offState;
+
+            this.button.onclick = function() {
+                self.currState.pressed();
+            }
+
+        }
+
+        Light.prototype.setState = function(state) {
+            this.currState = state;
+        }
+
+        var lit = new Light();
+        lit.init();
+
+        */
+        // 基于 javascript的状态模式修改 
+
+
+        // 1. 状态机对象
+
+        var FSM = {
+            on: function() {
+                console.log('执行开灯')
+                this.currState = FSM.off;
+            },
+
+            off: function() {
+                console.log('执行关灯');
+                this.currState = FSM.on;
+            }
+        }
+
+        var Light = function() {
+            this.currState = FSM.off;
+            this.button = null;
+        }
+
+        Light.prototype.init = function() {
+            var btn = document.createElement('button'),
+                self = this;
+
+            this.button = btn;
+            this.button.innerHTML = "开or关"
+            this.button.onclick = function() {
+                self.currState.call(self);
+            }
+            document.body.appendChild(this.button);
+        }
+
+        var btn = new Light();
+        btn.init();
+    </script>
+</body>
+
+</html>
